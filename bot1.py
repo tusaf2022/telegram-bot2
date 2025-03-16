@@ -28,14 +28,14 @@ async def filter_messages(update: Update, context: CallbackContext) -> None:
     user_id = update.message.from_user.id
     text = update.message.text.lower()
 
+    # 운영진인지 먼저 확인 (운영진이면 그냥 통과)
+    if user_id in EXEMPT_USERS:
+        return  # 메시지 삭제 X, 아무 행동도 하지 않음
+
+    # 금지어 감지 및 일반 사용자 처리
     if any(word in text for word in FORBIDDEN_WORDS):
         try:
             await context.bot.delete_message(chat_id=chat_id, message_id=update.message.message_id)
-
-            # 예외 처리할 사용자인지 확인
-            if user_id in EXEMPT_USERS:
-                await context.bot.send_message(chat_id, f"⚠️ {update.message.from_user.first_name}님은 운영진이므로 강퇴되지 않습니다.")
-                return
 
             # 영구 강퇴 (재입장 불가)
             await context.bot.ban_chat_member(chat_id, user_id)
@@ -43,6 +43,7 @@ async def filter_messages(update: Update, context: CallbackContext) -> None:
             await context.bot.send_message(chat_id, f"⚠️ {update.message.from_user.first_name}님이 금지된 단어를 사용하여 영구 강퇴되었습니다.")
         except Exception as e:
             print(f"오류 발생: {e}")
+
 
 
 def main():
