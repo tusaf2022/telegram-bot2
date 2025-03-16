@@ -20,6 +20,9 @@ FORBIDDEN_WORDS = ["좆같은새끼", "좆같은새.끼", "좆같은새1끼", "�
 async def start(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text("안녕하세요! 저는 금지어 감시 봇입니다.")
 
+# 예외 처리할 관리자 ID 목록
+EXEMPT_USERS = [2038663568, 6427359534]  # 운영진의 Telegram ID를 여기에 추가
+
 async def filter_messages(update: Update, context: CallbackContext) -> None:
     chat_id = update.message.chat_id
     user_id = update.message.from_user.id
@@ -28,10 +31,19 @@ async def filter_messages(update: Update, context: CallbackContext) -> None:
     if any(word in text for word in FORBIDDEN_WORDS):
         try:
             await context.bot.delete_message(chat_id=chat_id, message_id=update.message.message_id)
+
+            # 예외 처리할 사용자인지 확인
+            if user_id in EXEMPT_USERS:
+                await context.bot.send_message(chat_id, f"⚠️ {update.message.from_user.first_name}님은 운영진이므로 강퇴되지 않습니다.")
+                return
+
+            # 영구 강퇴 (재입장 불가)
             await context.bot.ban_chat_member(chat_id, user_id)
-            await context.bot.send_message(chat_id, f"⚠️ {update.message.from_user.first_name}님이 금지된 단어를 사용하여 강퇴되었습니다.")
+
+            await context.bot.send_message(chat_id, f"⚠️ {update.message.from_user.first_name}님이 금지된 단어를 사용하여 영구 강퇴되었습니다.")
         except Exception as e:
             print(f"오류 발생: {e}")
+
 
 def main():
     app = Application.builder().token(TOKEN).build()
