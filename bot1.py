@@ -40,7 +40,7 @@ async def filter_messages(update: Update, context: CallbackContext) -> None:
             # 영구 강퇴 (재입장 불가)
             await context.bot.ban_chat_member(chat_id, user_id)
 
-            await context.bot.send_message(chat_id, f"⚠️ {update.message.from_user.first_name}님이 금지된 단어를 사용하여 영구 강퇴되었습니다.")
+            await context.bot.send_message(chat_id, f"⚠️ {update.message.from_user.first_name}님이 금지된 단어를 사용하여 강퇴되었습니다.")
         except Exception as e:
             print(f"오류 발생: {e}")
 
