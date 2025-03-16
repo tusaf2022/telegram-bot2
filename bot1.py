@@ -3,7 +3,7 @@ from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, CallbackContext, CommandHandler
 
 # Railway 환경 변수에서 TOKEN 불러오기
-TOKEN = os.getenv("TOKEN")  # 환경 변수에서 가져옴
+TOKEN = os.getenv("TOKEN")  # 환경 변수에서 "TOKEN"이라는 키의 값을 가져옴
 
 # 금지어 리스트 (원하는 단어 추가 가능)
 FORBIDDEN_WORDS = ["손실", "손.실", "손실1"]
@@ -33,3 +33,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
