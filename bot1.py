@@ -6,7 +6,7 @@ from telegram.ext import Application, MessageHandler, filters, CallbackContext, 
 TOKEN = os.getenv("TOKEN")
 
 # 금지어 리스트 (원하는 단어 추가 가능)
-FORBIDDEN_WORDS = ["손실", "손.실", "손실1"]
+FORBIDDEN_WORDS = ["손실", "손.실", "카피", "카.피"]
 
 async def start(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text("안녕하세요! 저는 금지어 감시 봇입니다.")
